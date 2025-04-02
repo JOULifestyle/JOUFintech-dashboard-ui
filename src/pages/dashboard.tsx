@@ -1,16 +1,17 @@
+import { useState } from "react";
 import InvestmentSummary from "../components/InvestmentSummary";
 import SavingsGoals from "../components/SavingsGoals";
 import TransactionHistory from "../components/TransactionHistory";
 import QuickActions from "../components/QuickActions";
 import Chart from "../components/Chart";
-import { useState } from "react";
 
 const Dashboard = () => {
     const [user] = useState({ fullName: "Israel Olasehinde", savingsBalance: 7500, investmentBalance: 22000 });
 
     return (
         <div className="space-y-6 p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen ml-60">
-            {/* Welcome Section */}
+
+            {/* Welcome and Balance Section */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center">
                 <div>
                     <h2 className="text-3xl font-bold">Welcome, {user.fullName} 👋</h2>
@@ -28,7 +29,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Company Statement Section */}
+            {/* JOUFintech Section */}
             <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center">
                 <div className="flex-1">
                     <h3 className="text-2xl font-semibold">JOUFintech: Your Trusted Financial Partner</h3>
@@ -44,19 +45,19 @@ const Dashboard = () => {
                 />
             </div>
 
-            {/* Core Sections */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Grid Section for Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <InvestmentSummary />
                 <SavingsGoals />
                 <QuickActions />
             </div>
 
-            {/* Performance Chart */}
+            {/* Chart Section */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <Chart />
             </div>
 
-            {/* Customer Review Section */}
+            {/* Customer Testimonial Section */}
             <div className="bg-gray-200 dark:bg-gray-700 p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center">
                 <img
                     src="https://images.pexels.com/photos/4484071/pexels-photo-4484071.jpeg?auto=compress&cs=tinysrgb&w=800"
