@@ -7,10 +7,13 @@ import Chart from "../components/Chart";
 
 const Dashboard = () => {
     const [user] = useState({ fullName: "Israel Olasehinde", savingsBalance: 7500, investmentBalance: 22000 });
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add state for sidebar visibility
 
     return (
-        <div className="space-y-6 p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen ml-60">
+        <div className={`space-y-6 p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-all duration-300 
+            ${isSidebarOpen ? "ml-64" : "ml-0"}`} // Dynamically change margin based on sidebar state
 
+        >
             {/* Welcome and Balance Section */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center">
                 <div>
