@@ -16,7 +16,7 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <div
-                className={`fixed top-20 left-0 h-screen bg-gray-800 text-white p-5 shadow-lg z-40 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen 
+                className={`fixed top-0 left-0 h-screen bg-gray-800 text-white p-5 shadow-lg z-40 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen 
                 ${isOpen ? "block" : "hidden"} md:block`} // Show or hide based on state
             >
                 <h1 className="text-2xl font-bold mb-6">Welcome!</h1>
