@@ -10,16 +10,21 @@ import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { AuthProvider } from "./context/AuthContext"; // Import AuthProvider
+import { useState } from "react"; // Import useState
 
 function App() {
   const { theme } = useDarkMode();
+
+  // State to control sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <AuthProvider>
       <div className="bg-gray-100 dark:bg-gray-900 min-h-screen text-black dark:text-white">
         <Router>
           <Header />
           <div className="flex">
-            <Sidebar />
+            <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <div className="flex-1 p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
