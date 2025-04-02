@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default Light Mode */
+html, body {
+  @apply bg-gray-100 text-gray-800 transition-colors duration-300;
+}
+
+/* Dark Mode Styles */
+.dark {
+  @apply bg-gray-900 text-gray-200;
+}
+
+/* Headings */
+h2 {
+  @apply text-2xl font-bold;
+}
+
+/* Sidebar Animation */
+.container {
+  display: flex;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar {
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+/* Content Area Adjustments */
+.main-content {
+  flex: 1;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 60px;
+}
+
+/* Theme Transition */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
