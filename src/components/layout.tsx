@@ -11,21 +11,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <div className="relative">
-            <Header /> {/* Ensure Header exists */}
+            <Header toggleSidebar={toggleSidebar} /> {/* Pass toggleSidebar as prop */}
 
             {/* Button to open/close sidebar */}
-            <button
-                onClick={toggleSidebar}
-                className="fixed top-5 left-5 z-50 p-3 bg-gray-800 text-white rounded-full shadow-lg focus:outline-none lg:hidden"
-            >
-                {/* This is the hamburger menu icon */}
-                <span className="material-icons">menu</span>
-            </button>
-
-            {/* Sidebar */}
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-            <main>{children}</main> {/* This will render the specific page content */}
+            {/* Main content area with dynamic left margin when sidebar is open */}
+            <main
+                className={`transition-all duration-300 ${isSidebarOpen ? "ml-60" : "ml-0" // Adjust the left margin based on sidebar state
+                    }`}
+            >
+                {children} {/* This will render the specific page content */}
+            </main>
         </div>
     );
 };

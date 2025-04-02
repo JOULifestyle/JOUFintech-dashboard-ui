@@ -32,18 +32,18 @@ const ChartComponent = () => {
     };
 
     return (
-        <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Investment & Savings Overview</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Investment & Savings Overview</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Investment Growth Chart */}
-                <div className="p-4 border rounded-md bg-gray-50">
-                    <h3 className="text-lg font-medium mb-2">Investment Growth</h3>
+                <div className="p-4 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                    <h3 className="text-lg font-medium mb-2 text-gray-800 dark:text-white">Investment Growth</h3>
                     <Bar data={investmentData} options={{ responsive: true, plugins: { legend: { display: false } } }} />
                 </div>
 
                 {/* Savings Distribution Chart */}
-                <div className="p-4 border rounded-md bg-gray-50">
-                    <h3 className="text-lg font-medium mb-2">Savings Distribution</h3>
+                <div className="p-4 border rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                    <h3 className="text-lg font-medium mb-2 text-gray-800 dark:text-white">Savings Distribution</h3>
                     <Pie data={savingsData} options={{ responsive: true }} />
                 </div>
             </div>

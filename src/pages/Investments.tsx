@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const investmentsData = [
@@ -18,12 +18,16 @@ const investmentOpportunities = [
 ];
 
 const Investments = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add state for sidebar visibility
+
     return (
-        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen ml-60">
+        <div className={`p-6 bg-gray-100 dark:bg-gray-800 min-h-screen transition-all duration-300 
+            ${isSidebarOpen ? "ml-64" : "ml-0"}`} // Dynamically change margin based on sidebar state
+        >
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Investment Overview</h2>
 
-            {/* Summary Cards */}
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
+            {/* Investment Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold">Total Investment</h3>
                     <p className="text-2xl font-bold text-blue-600"> $22,000 </p>
@@ -38,9 +42,8 @@ const Investments = () => {
                 </div>
             </div>
 
-            {/* Charts Section */}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-                {/* Investment Growth Chart */}
+            {/* Investment Charts */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold mb-4">Investment Growth</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -54,7 +57,6 @@ const Investments = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Investment Breakdown Chart */}
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold mb-4">Investment Breakdown</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -69,9 +71,9 @@ const Investments = () => {
                 </div>
             </div>
 
-            {/* Investment Opportunities Section */}
+            {/* Investment Opportunities */}
             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white">Investment Opportunities</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {investmentOpportunities.map((investment) => (
                     <div key={investment.id} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                         <h4 className="text-lg font-semibold">{investment.name}</h4>

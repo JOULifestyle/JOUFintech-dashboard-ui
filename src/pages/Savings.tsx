@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const savingsData = [
@@ -24,11 +24,15 @@ const savingsGoals = [
 ];
 
 const Savings = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+
     return (
-        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen ml-60">
+        <div className={`p-6 bg-gray-100 dark:bg-gray-800 min-h-screen transition-all duration-300 
+            ${isSidebarOpen ? "ml-64" : "ml-0"}`} // Fullscreen layout when sidebar is open
+        >
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Savings Overview</h2>
 
-            {/* Summary Cards */}
+            {/* Stats Section */}
             <div className="grid md:grid-cols-3 gap-6 mb-6">
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold">Total Savings</h3>
@@ -46,7 +50,6 @@ const Savings = () => {
 
             {/* Charts Section */}
             <div className="grid md:grid-cols-2 gap-6">
-                {/* Savings Growth Chart */}
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold mb-4">Savings Growth</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -60,7 +63,6 @@ const Savings = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Goal Completion Chart */}
                 <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-700 dark:text-white">
                     <h3 className="text-lg font-semibold mb-4">Goal Completion</h3>
                     <ResponsiveContainer width="100%" height={250}>
@@ -75,7 +77,7 @@ const Savings = () => {
                 </div>
             </div>
 
-            {/* Savings Methods */}
+            {/* Savings Methods Section */}
             <h3 className="text-xl font-bold mt-6 mb-4 text-gray-800 dark:text-white">Ways to Build Your Savings</h3>
             <div className="grid md:grid-cols-2 gap-6">
                 {savingsMethods.map((method, index) => (
@@ -90,7 +92,7 @@ const Savings = () => {
                 ))}
             </div>
 
-            {/* Savings Goals */}
+            {/* Savings Goals Section */}
             <h3 className="text-xl font-bold mt-6 mb-4 text-gray-800 dark:text-white">Savings Goals</h3>
             <div className="grid md:grid-cols-2 gap-6">
                 {savingsGoals.map((goal, index) => (

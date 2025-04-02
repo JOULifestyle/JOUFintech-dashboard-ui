@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-// Dummy transaction data
 const transactions = [
     { id: 1, date: "2025-03-01", description: "Deposit", amount: 500, type: "credit", balance: 5000 },
     { id: 2, date: "2025-03-03", description: "Investment in Stocks", amount: 2000, type: "debit", balance: 3000 },
@@ -20,10 +19,9 @@ const TransactionHistory: React.FC = () => {
     );
 
     return (
-        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen ml-60">
+        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen overflow-auto">
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Transaction History</h2>
 
-            {/* Search bar */}
             <div className="mb-6 flex items-center space-x-4">
                 <input
                     type="text"
@@ -35,7 +33,7 @@ const TransactionHistory: React.FC = () => {
             </div>
 
             {/* Transaction Table */}
-            <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+            <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full table-auto">
                     <thead>
                         <tr>
@@ -52,15 +50,13 @@ const TransactionHistory: React.FC = () => {
                                 <td className="py-2 px-4 text-gray-900 dark:text-gray-100">{transaction.date}</td>
                                 <td className="py-2 px-4 text-gray-900 dark:text-gray-100">{transaction.description}</td>
                                 <td
-                                    className={`py-2 px-4 ${transaction.type === "credit" ? "text-green-600" : "text-red-600"
-                                        }`}
+                                    className={`py-2 px-4 ${transaction.type === "credit" ? "text-green-600" : "text-red-600"}`}
                                 >
                                     {transaction.type === "credit" ? "+" : "-"}${transaction.amount}
                                 </td>
                                 <td className="py-2 px-4">
                                     <span
-                                        className={`px-3 py-1 rounded-full text-xs ${transaction.type === "credit" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
-                                            }`}
+                                        className={`px-3 py-1 rounded-full text-xs ${transaction.type === "credit" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
                                     >
                                         {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
                                     </span>

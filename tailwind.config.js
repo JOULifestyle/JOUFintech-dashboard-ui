@@ -1,5 +1,5 @@
 module.exports = {
-  darkMode: 'class', // or 'media' for automatic detection
+  darkMode: 'media',
   theme: {
     extend: {
       colors: {

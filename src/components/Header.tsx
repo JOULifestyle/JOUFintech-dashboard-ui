@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useDarkMode } from "../hooks/useDarkMode";
-import { useAuth } from "../context/AuthContext"; // Import Auth Context
+import { useAuth } from "../context/AuthContext";
 import { Moon, Sun, X } from "lucide-react";
 
-const Header = () => {
-    const { theme, toggleTheme } = useDarkMode();
-    const { isLoggedIn, user, login, logout } = useAuth(); // Use authentication
+interface HeaderProps {
+    setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Header: React.FC<HeaderProps> = ({ setIsSidebarOpen }) => {
+    const { isLoggedIn, user, login, logout } = useAuth();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [fullName, setFullName] = useState("");
     const [password, setPassword] = useState("");
@@ -19,23 +21,32 @@ const Header = () => {
             .toUpperCase();
 
     const handleLogin = async () => {
-        setError(""); // Clear previous error
+        setError("");
         try {
             await login(fullName);
-            setShowLoginModal(false); // Close modal after successful login
+            setShowLoginModal(false);
         } catch (err) {
-            setError("Invalid name or password"); // Show error
+            setError("Invalid name or password");
         }
     };
 
     return (
         <>
-            {/* Header */}
             <header className="fixed top-0 left-0 w-full h-20 bg-blue-600 dark:bg-gray-900 text-white flex justify-between items-center px-6 py-4 shadow-md z-50">
-                <h1 className="text-2xl font-bold">JOUFintech</h1>
 
-                {/* Search Bar */}
-                <div className="flex-grow max-w-md ml-auto">
+                {/* Sidebar Toggle Button */}
+                <button
+                    onClick={() => setIsSidebarOpen((prev) => !prev)}
+                    className="text-white p-4 rounded-md hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
+                >
+                    {"☰"}
+                </button>
+
+                {/* Title */}
+                <h1 className="text-2xl font-bold sm:ml-0 mr-20">JOUFintech</h1>
+
+                {/* Search Box */}
+                <div className="hidden sm:block flex-grow max-w-md ml-auto">
                     <input
                         type="text"
                         placeholder="Search..."
@@ -43,21 +54,8 @@ const Header = () => {
                     />
                 </div>
 
-                {/* User Section */}
+                {/* User Info & Logout / Login Button */}
                 <div className="flex items-center space-x-4 ml-4">
-                    {/* Dark Mode Toggle (Always Visible) */}
-                    <button
-                        onClick={toggleTheme}
-                        className="p-2 bg-gray-200 dark:bg-gray-700 rounded"
-                    >
-                        {theme === "dark" ? (
-                            <Sun className="text-yellow-400" />
-                        ) : (
-                            <Moon className="text-gray-800" />
-                        )}
-                    </button>
-
-                    {/* User Avatar & Name (only if logged in) */}
                     {isLoggedIn && user && (
                         <>
                             <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-500 text-white text-lg font-bold border-2 border-white">
@@ -67,18 +65,17 @@ const Header = () => {
                         </>
                     )}
 
-                    {/* Login / Logout Buttons */}
                     {isLoggedIn ? (
                         <button
                             onClick={logout}
-                            className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition"
+                            className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-300 cursor-pointer"
                         >
                             Logout
                         </button>
                     ) : (
                         <button
                             onClick={() => setShowLoginModal(true)}
-                            className="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                            className="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300 cursor-pointer"
                         >
                             Login / Sign Up
                         </button>
@@ -86,10 +83,8 @@ const Header = () => {
                 </div>
             </header>
 
-            {/* Adjusted Content Spacing */}
             <div className="pt-16"></div>
 
-            {/* Login Modal */}
             {showLoginModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded-lg shadow-lg w-96 relative">

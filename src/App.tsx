@@ -1,3 +1,4 @@
+// App.tsx
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useDarkMode } from "./hooks/useDarkMode"; // Import ThemeProvider
 import Dashboard from "./pages/dashboard";
@@ -22,7 +23,7 @@ function App() {
     <AuthProvider>
       <div className="bg-gray-100 dark:bg-gray-900 min-h-screen text-black dark:text-white">
         <Router>
-          <Header />
+          <Header setIsSidebarOpen={setIsSidebarOpen} />
           <div className="flex">
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <div className="flex-1 p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">

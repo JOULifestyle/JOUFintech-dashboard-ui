@@ -21,12 +21,13 @@ const performanceData = [
 
 const InvestmentSummary = () => {
     return (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold mb-4">Investment Portfolio</h3>
-            <p>Risk Level: <span className="font-bold text-yellow-600">Medium</span></p>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Investment Portfolio</h3>
+            <p className="text-gray-700 dark:text-gray-300">
+                Risk Level: <span className="font-bold text-yellow-600">Medium</span>
+            </p>
 
-
-            <h4 className="text-lg font-semibold mt-4">Portfolio Breakdown</h4>
+            <h4 className="text-lg font-semibold mt-4 text-gray-900 dark:text-white">Portfolio Breakdown</h4>
             <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                     <Pie data={portfolioData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label>
@@ -38,8 +39,7 @@ const InvestmentSummary = () => {
                 </PieChart>
             </ResponsiveContainer>
 
-
-            <h4 className="text-lg font-semibold mt-6">Recent Performance</h4>
+            <h4 className="text-lg font-semibold mt-6 text-gray-900 dark:text-white">Recent Performance</h4>
             <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={performanceData}>
                     <XAxis dataKey="month" stroke="#8884d8" />

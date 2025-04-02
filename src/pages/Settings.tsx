@@ -46,7 +46,6 @@ const SettingsPage: React.FC = () => {
 
     const handleSaveClick = () => {
         setIsEditing(false);
-        // Here you can make an API call to save the updated profile
         console.log("Profile saved:", profile);
     };
 
@@ -59,69 +58,29 @@ const SettingsPage: React.FC = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen ml-60">
+        <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
             <h2 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">Settings</h2>
 
-            {/* Tabs */}
-            <div className="flex justify-center space-x-8 mb-6">
-                <button
-                    className={`${activeTab === "profile" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("profile")}
-                >
-                    Profile
-                </button>
-                <button
-                    className={`${activeTab === "security" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("security")}
-                >
-                    Security
-                </button>
-                <button
-                    className={`${activeTab === "notifications" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("notifications")}
-                >
-                    Notifications
-                </button>
-                <button
-                    className={`${activeTab === "paymentMethods" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("paymentMethods")}
-                >
-                    Payment Methods
-                </button>
-                <button
-                    className={`${activeTab === "password" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("password")}
-                >
-                    Password
-                </button>
-                <button
-                    className={`${activeTab === "language" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("language")}
-                >
-                    Language
-                </button>
-                <button
-                    className={`${activeTab === "helpSupport" ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
-                        } hover:text-blue-600 dark:hover:text-blue-500`}
-                    onClick={() => setActiveTab("helpSupport")}
-                >
-                    Help & Support
-                </button>
+            {/* Tab Navigation */}
+            <div className="flex flex-wrap justify-center space-x-6 mb-6">
+                {["profile", "security", "notifications", "paymentMethods", "password", "language", "helpSupport"].map((tab) => (
+                    <button
+                        key={tab}
+                        className={`${activeTab === tab ? "text-blue-600 font-semibold" : "text-gray-600 dark:text-gray-300"
+                            } hover:text-blue-600 dark:hover:text-blue-500 px-4 py-2`}
+                        onClick={() => setActiveTab(tab)}
+                    >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                ))}
             </div>
 
-            {/* Settings Sections */}
+            {/* Content Section */}
             <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
                 {activeTab === "profile" && (
                     <div>
                         <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Profile</h3>
-                        <div className="flex items-center space-x-4 mb-4">
-                            {/* Avatar with initials */}
+                        <div className="flex flex-wrap items-center space-x-4 mb-4">
                             <div className="w-16 h-16 bg-blue-500 rounded-full flex justify-center items-center text-white font-semibold">
                                 {getInitials(settingsData.profile.name)}
                             </div>
@@ -223,7 +182,7 @@ const SettingsPage: React.FC = () => {
                     </div>
                 )}
 
-                {/* Similar dark mode updates for other sections */}
+                {/* Add similar blocks for other sections (paymentMethods, password, language, helpSupport) */}
             </div>
         </div>
     );

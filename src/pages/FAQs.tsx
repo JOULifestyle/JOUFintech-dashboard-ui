@@ -33,21 +33,21 @@ const FAQPage: React.FC = () => {
 
     const handleToggle = (index: number) => {
         if (expandedIndex === index) {
-            setExpandedIndex(null); // Close the answer if already open
+            setExpandedIndex(null);
         } else {
-            setExpandedIndex(index); // Open the selected answer
+            setExpandedIndex(index);
         }
     };
 
     return (
-        <div className="p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen min-h-screen ml-60">
+        <div className="p-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col justify-start">
             <h2 className="text-3xl font-bold text-center mb-6">Frequently Asked Questions</h2>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto w-full">
                 {faqData.map((faq, index) => (
                     <div
                         key={index}
-                        className="bg-white rounded-lg shadow-md mb-4 overflow-hidden"
+                        className="bg-white rounded-lg shadow-md mb-4 overflow-hidden w-full"
                     >
                         <div
                             className="py-4 px-6 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -56,7 +56,6 @@ const FAQPage: React.FC = () => {
                             <h3 className="text-xl font-semibold">{faq.question}</h3>
                         </div>
 
-                        {/* Answer Section */}
                         {expandedIndex === index && (
                             <div className="py-4 px-6 bg-gray-50">
                                 <p>{faq.answer}</p>
