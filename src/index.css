@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* Define a custom variant for dark mode */
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-joublue: #3b82f6;
+  --color-joupurple: #8b5cf6;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
