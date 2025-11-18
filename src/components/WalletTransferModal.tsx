@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useUIStore } from "../stores/uiStore";
+import { getCurrencySymbol } from "../features/utils/chartUtils";
 
 type Wallet = { id: string; name: string; balance: number; currency?: string };
 
@@ -14,6 +16,7 @@ export default function WalletTransferModal({
   onClose,
   onTransfer,
 }: Props) {
+  const { currency, exchangeRates } = useUIStore();
   const [fromId, setFromId] = useState("");
   const [toId, setToId] = useState("");
   const [amount, setAmount] = useState<number>(0);
@@ -29,12 +32,14 @@ export default function WalletTransferModal({
       return;
     }
     const fromWallet = wallets.find((w) => w.id === fromId);
-    if (fromWallet && amount > fromWallet.balance) {
+    // Convert the entered amount from user's currency back to USD for validation and transfer
+    const usdAmount = amount / (exchangeRates[currency] || 1);
+    if (fromWallet && usdAmount > fromWallet.balance) {
       setError("Insufficient balance in source wallet.");
       return;
     }
 
-    onTransfer(fromId, toId, amount);
+    onTransfer(fromId, toId, usdAmount);
     onClose();
   };
 
@@ -84,7 +89,7 @@ export default function WalletTransferModal({
                 <option value="">Select source wallet</option>
                 {wallets.map((w) => (
                   <option key={w.id} value={w.id}>
-                    {w.name} - ${w.balance.toLocaleString()} available
+                    {w.name} - {getCurrencySymbol(currency)}{(w.balance * (exchangeRates[currency] || 1)).toLocaleString()} available
                   </option>
                 ))}
               </select>
@@ -118,11 +123,11 @@ export default function WalletTransferModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Transfer Amount
+                Transfer Amount ({getCurrencySymbol(currency)})
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 dark:text-gray-400 text-sm">$</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">{getCurrencySymbol(currency)}</span>
                 </div>
                 <input
                   type="number"

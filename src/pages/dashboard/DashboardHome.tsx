@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Dialog } from '@headlessui/react';
 import {
   PlusIcon,
   ChartBarIcon,
   CurrencyDollarIcon,
   ArrowTrendingUpIcon,
-  BanknotesIcon
+  BanknotesIcon,
+  TagIcon
 } from '@heroicons/react/24/outline';
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/client";
 import { useAuthStore } from "../../stores/authStore";
-import { useToastStore } from "../../stores/toastStore";
 import { useUIStore } from "../../stores/uiStore";
 import { useNotificationStore } from "../../stores/notificationStore";
 import type { Transaction } from "../../api/transactions";
@@ -22,19 +23,21 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import LineChartCard from "../../components/charts/LineChartCard";
 import PieChartCard from "../../components/charts/PieChartCard";
+import TransactionForm from "../../components/TransactionForm";
 import TransactionsPage from "../transactions/Transactions";
 import WalletsPage from "../wallets/Wallets";
+import InvestmentsPage from "../investments/Investments";
+import SavingsGoals from "../savings-goals/SavingsGoals";
 import ChartsPage from "../charts/Charts";
 
-// No inline mocks - all data comes from MSW handlers
 
 export default function DashboardHome() {
   const { user } = useAuthStore();
-  const { addToast } = useToastStore();
   const { currency, exchangeRates } = useUIStore();
   const { notifications, unreadCount, markAsRead, notificationsEnabled } = useNotificationStore();
   const [activeTab, setActiveTab] = useState('overview');
   const [showAllNotifications, setShowAllNotifications] = useState(false);
+  const [showTransactionForm, setShowTransactionForm] = useState(false);
 
   // Balance
   const { data: balanceData } = useQuery<{ total: number; available: number; pending: number }>({
@@ -100,11 +103,21 @@ export default function DashboardHome() {
   });
 
   const totalBalance = balanceData?.total || 0;
-  const totalInvestments = investments.reduce((sum: number, inv: any) => sum + inv.totalValue, 0);
+  const totalInvestments = investments.reduce((sum: number, inv: any) => sum + (inv.units * inv.currentPrice), 0);
   const recentTransactions = transactions.slice(0, 5);
   const lineData = groupByMonth(allTx);
   const pieData = groupByCategory(allTx);
-  const insights = generateInsights(allTx, allTx.map((t) => ({ ...t, amount: t.amount * 0.9 })));
+  const insights = generateInsights(allTx);
+
+  // Calculate wallets added this month
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const walletsThisMonth = Array.isArray(wallets) ? wallets.filter((wallet: any) => {
+    if (!wallet.createdAt) return false;
+    const createdDate = new Date(wallet.createdAt);
+    return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
+  }).length : 0;
+
 
   const formatCurrency = (amount: number) => {
     const convertedAmount = amount * (exchangeRates[currency] || 1);
@@ -118,7 +131,7 @@ export default function DashboardHome() {
   const handleQuickAction = (action: string) => {
     switch (action) {
       case 'add-transaction':
-        addToast({ message: 'Transaction form opened', type: 'success' });
+        setShowTransactionForm(true);
         break;
       case 'view-analytics':
         setActiveTab('analytics');
@@ -139,7 +152,7 @@ export default function DashboardHome() {
       >
         <div className="relative z-10">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
-            Welcome back, {user?.displayName || 'User'}! 👋
+            Welcome back, {user?.displayName || 'User'}! 🙂
           </h1>
           <p className="text-joublue-100 mb-4">
             Here's your financial overview for today
@@ -170,13 +183,13 @@ export default function DashboardHome() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Active Wallets</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{wallets.length}</p>
-              <p className="text-sm text-green-600 dark:text-green-400">+2 this month</p>
+              <p className="text-sm text-green-600 dark:text-green-400">+{walletsThisMonth} this month</p>
             </div>
             <div className="w-12 h-12 bg-joublue-100 dark:bg-joublue-900/30 rounded-xl flex items-center justify-center">
               <BanknotesIcon className="h-6 w-6 text-joublue-600 dark:text-joublue-400" />
@@ -188,7 +201,7 @@ export default function DashboardHome() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -208,7 +221,8 @@ export default function DashboardHome() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer"
+          onClick={() => setActiveTab('investments')}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -228,15 +242,16 @@ export default function DashboardHome() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer"
+          onClick={() => setActiveTab('savings-goals')}
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Savings Goals</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {savingsGoals.filter((g: any) => g.isCompleted).length}/{savingsGoals.length}
+                {savingsGoals.length}
               </p>
-              <p className="text-sm text-joublue-600 dark:text-joublue-400">Completed</p>
+              <p className="text-sm text-joublue-600 dark:text-joublue-400">Active goals</p>
             </div>
             <div className="w-12 h-12 bg-warning-100 dark:bg-warning-900/30 rounded-xl flex items-center justify-center">
               <CurrencyDollarIcon className="h-6 w-6 text-warning-600 dark:text-warning-400" />
@@ -334,7 +349,7 @@ export default function DashboardHome() {
             <div className="space-y-3">
               <button
                 onClick={() => handleQuickAction('add-transaction')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-joublue-50 dark:bg-joublue-900/20 hover:bg-joublue-100 dark:hover:bg-joublue-900/30 rounded-xl transition-colors"
+                className="w-full flex items-center gap-3 p-3 text-left bg-joublue-50 dark:bg-joublue-900/20 hover:bg-joublue-100 dark:hover:bg-joublue-900/30 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <PlusIcon className="h-5 w-5 text-joublue-600 dark:text-joublue-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -344,7 +359,7 @@ export default function DashboardHome() {
 
               <button
                 onClick={() => handleQuickAction('manage-wallets')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <BanknotesIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -354,7 +369,7 @@ export default function DashboardHome() {
 
               <button
                 onClick={() => handleQuickAction('view-analytics')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <ChartBarIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -476,6 +491,8 @@ export default function DashboardHome() {
     { id: 'overview', label: 'Overview', icon: ChartBarIcon },
     { id: 'transactions', label: 'Transactions', icon: CurrencyDollarIcon },
     { id: 'wallets', label: 'Wallets', icon: BanknotesIcon },
+    { id: 'investments', label: 'Investments', icon: ChartBarIcon },
+    { id: 'savings-goals', label: 'Savings Goals', icon: TagIcon },
     { id: 'analytics', label: 'Analytics', icon: ArrowTrendingUpIcon }
   ];
 
@@ -492,7 +509,7 @@ export default function DashboardHome() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-joublue-500 text-white shadow-soft'
+                    ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-soft'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
@@ -514,8 +531,37 @@ export default function DashboardHome() {
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'transactions' && <TransactionsPage />}
         {activeTab === 'wallets' && <WalletsPage />}
+        {activeTab === 'investments' && <InvestmentsPage />}
+        {activeTab === 'savings-goals' && <SavingsGoals />}
         {activeTab === 'analytics' && <ChartsPage />}
       </motion.div>
+
+      {/* Transaction Form Modal */}
+      <Dialog open={showTransactionForm} onClose={() => setShowTransactionForm(false)} className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" aria-hidden="true" />
+
+          <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative z-10">
+            <div className="px-6 py-6">
+              <div className="flex items-center justify-between mb-6">
+                <Dialog.Title className="text-xl font-bold text-gray-900 dark:text-white">
+                  Add New Transaction
+                </Dialog.Title>
+                <button
+                  onClick={() => setShowTransactionForm(false)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                >
+                  <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <TransactionForm onClose={() => setShowTransactionForm(false)} />
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function WalletsPage() {
   const { currency, exchangeRates } = useUIStore();
   const [modalOpen, setModalOpen] = useState(false);
 
-  // ✅ Fetch wallets
+  // Fetch wallets
   const { data: wallets = [], isLoading } = useQuery<Wallet[]>({
     queryKey: ["wallets"],
     queryFn: async () => {
@@ -31,9 +31,9 @@ export default function WalletsPage() {
     },
   });
 
-  // ✅ Optimistic wallet transfer mutation
+  // Optimistic wallet transfer mutation
   const transferMutation = useMutation<
-    any, // response data type (you can replace `any` with something specific)
+    any, // I am using this for now, once I have any specific thing to return, I'll type it
     Error, // error type
     { fromId: string; toId: string; amount: number }, // variables type
     { prev?: Wallet[] } // context type (for rollback)

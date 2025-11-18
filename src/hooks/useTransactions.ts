@@ -7,7 +7,7 @@ import {
   deleteTransaction,
 } from "../api/transactions";
 
-// ✅ Fetch transactions (typed)
+// Fetch transactions
 export function useTransactions(page: number) {
   return useQuery<Transaction[]>({
     queryKey: ["transactions", { page }],
@@ -15,7 +15,7 @@ export function useTransactions(page: number) {
   });
 }
 
-// ✅ Create transaction
+// Create transaction
 export function useCreateTransaction() {
   const queryClient = useQueryClient();
 
@@ -37,11 +37,15 @@ export function useCreateTransaction() {
         queryClient.setQueryData(["transactions"], (context as { previous: Transaction[] }).previous);
       }
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["wallets"] });
+      queryClient.invalidateQueries({ queryKey: ["balance"] });
+    },
   });
 }
 
-// ✅ Update transaction
+// Update transaction
 export function useUpdateTransaction() {
   const queryClient = useQueryClient();
 
@@ -66,7 +70,7 @@ export function useUpdateTransaction() {
   });
 }
 
-// ✅ Delete transaction
+// Delete transaction
 export function useDeleteTransaction() {
   const queryClient = useQueryClient();
 

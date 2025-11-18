@@ -9,7 +9,9 @@ import Insights from "../../components/Insights";
 
 export default function ChartsPage() {
   const { currency, exchangeRates } = useUIStore();
-  const { data: transactions = [], isLoading } = useQuery<Transaction[], Error>({
+
+  // Get all transactions for charts
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery<Transaction[], Error>({
     queryKey: ["transactions-all"],
     queryFn: async () => {
       const res = await api.get("/transactions");
@@ -17,12 +19,22 @@ export default function ChartsPage() {
     },
   });
 
-  // For demo, last month = previous transactions slice (mock)
-  const lastMonthTransactions = transactions.map((t) => ({ ...t, amount: t.amount * 0.9 }));
+  // Get analytics data from API
+  const { data: analytics, isLoading: analyticsLoading } = useQuery({
+    queryKey: ["analytics"],
+    queryFn: async () => {
+      const res = await api.get("/analytics");
+      return res.data;
+    },
+  });
+
+  const isLoading = transactionsLoading || analyticsLoading;
+
+  // Insights are generated from all transactions
 
   const lineData = groupByMonth(transactions);
   const pieData = groupByCategory(transactions);
-  const insights = generateInsights(transactions, lastMonthTransactions);
+  const insights = generateInsights(transactions);
 
   if (isLoading) {
     return (
@@ -76,8 +88,8 @@ export default function ChartsPage() {
       </div>
 
       {/* Additional Stats Cards */}
-      {transactions.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {analytics && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
@@ -87,7 +99,7 @@ export default function ChartsPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{transactions.length}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.totalTransactions}</p>
               </div>
             </div>
           </div>
@@ -106,9 +118,27 @@ export default function ChartsPage() {
                     style: 'currency',
                     currency: currency,
                     minimumFractionDigits: 2
-                  }).format(transactions
-                    .filter(t => t.type === 'expense')
-                    .reduce((sum, t) => sum + t.amount, 0) * (exchangeRates[currency] || 1))}
+                  }).format(analytics.totalSpent * (exchangeRates[currency] || 1))}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Income</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: currency,
+                    minimumFractionDigits: 2
+                  }).format(analytics.monthlyIncome * (exchangeRates[currency] || 1))}
                 </p>
               </div>
             </div>
@@ -124,17 +154,11 @@ export default function ChartsPage() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Avg per Transaction</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {transactions.length > 0
-                    ? new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: currency,
-                        minimumFractionDigits: 2
-                      }).format((transactions.reduce((sum, t) => sum + t.amount, 0) / transactions.length) * (exchangeRates[currency] || 1))
-                    : new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: currency,
-                        minimumFractionDigits: 2
-                      }).format(0)}
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: currency,
+                    minimumFractionDigits: 2
+                  }).format(analytics.avgPerTransaction * (exchangeRates[currency] || 1))}
                 </p>
               </div>
             </div>

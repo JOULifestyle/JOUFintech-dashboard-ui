@@ -1,6 +1,10 @@
 import type { Transaction } from "../api/transactions";
+import { useUIStore } from "../stores/uiStore";
+import { getCurrencySymbol } from "../features/utils/chartUtils";
 
 export default function TransactionRow({ tx }: { tx: Transaction }) {
+  const { currency } = useUIStore();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -14,7 +18,8 @@ export default function TransactionRow({ tx }: { tx: Transaction }) {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
-    return type === 'income' ? `+$${formatted}` : `-$${formatted}`;
+    const symbol = getCurrencySymbol(currency);
+    return type === 'income' ? `+${symbol}${formatted}` : `-${symbol}${formatted}`;
   };
 
   return (

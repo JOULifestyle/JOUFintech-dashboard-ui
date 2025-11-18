@@ -1,36 +1,85 @@
 import { http, HttpResponse } from "msw";
 import type { Transaction } from "../api/transactions";
 
+interface Investment {
+  id: string;
+  assetType: 'stocks' | 'crypto' | 'real-estate' | 'mutual-fund' | 'fixed-income' | 'custom';
+  assetName: string;
+  buyPrice: number;
+  currentPrice: number;
+  units: number;
+  purchaseDate: string;
+  category?: string;
+}
+
 // --------------------------
 // Fake In-Memory Databases
 // --------------------------
 
 let transactions: Transaction[] = Array.from({ length: 25 }, (_, i) => ({
   id: (i + 1).toString(),
-  amount: Math.floor(Math.random() * 1000),
-  date: new Date(Date.now() - i * 86400000).toISOString(), // past i days
-  category: ["Groceries", "Bills", "Savings", "Investment"][i % 4],
-  type: i % 2 === 0 ? "expense" : "income",
+  amount: Math.floor(Math.random() * 1000) + 50,
+  date: new Date(Date.now() - i * 3600000).toISOString(), 
+  category: ["Groceries", "Bills", "Savings", "Investment", "Transport", "Entertainment"][i % 6],
+  type: i % 3 === 0 ? "income" : "expense", 
   walletId: "main",
-  description: `Transaction ${i + 1}`,
+  description: [
+    "Grocery shopping at Whole Foods",
+    "Monthly utility bill payment",
+    "Salary deposit",
+    "Investment dividend",
+    "Uber ride to work",
+    "Netflix subscription",
+    "Coffee at Starbucks",
+    "Freelance payment",
+    "Gas station fill-up",
+    "Amazon purchase"
+  ][i % 10],
 }));
 
 let wallets = [
-  { id: "main", name: "Main Account", balance: 5000 },
-  { id: "savings", name: "Savings", balance: 2000 },
-  { id: "crypto", name: "Crypto", balance: 1000 },
+  { id: "main", name: "Main Account", balance: 5000, createdAt: "2024-10-01T00:00:00.000Z" },
+  { id: "savings", name: "Savings", balance: 2000, createdAt: "2024-11-01T00:00:00.000Z" },
+  { id: "crypto", name: "Crypto", balance: 1000, createdAt: "2024-11-15T00:00:00.000Z" },
 ];
 
 let savingsGoals = [
-  { id: "1", name: "Emergency Fund", target: 10000, current: 7500, isCompleted: false },
-  { id: "2", name: "Vacation", target: 3000, current: 3000, isCompleted: true },
-  { id: "3", name: "New Car", target: 20000, current: 12000, isCompleted: false },
+  { id: "1", name: "Emergency Fund", target: 10000, current: 7500, isCompleted: false, completedAt: null },
+  { id: "2", name: "Vacation", target: 3000, current: 3000, isCompleted: true, completedAt: "2024-11-10T00:00:00.000Z" },
+  { id: "3", name: "New Car", target: 20000, current: 12000, isCompleted: false, completedAt: null },
 ];
 
-let investments = [
-  { id: "1", name: "Tech Stocks", totalValue: 15000, return: 12.5 },
-  { id: "2", name: "Bonds", totalValue: 8000, return: 5.2 },
-  { id: "3", name: "Crypto", totalValue: 5000, return: -8.3 },
+let investments: Investment[] = [
+  {
+    id: "1",
+    assetType: "stocks" as const,
+    assetName: "Tesla Inc.",
+    buyPrice: 150.00,
+    currentPrice: 180.50,
+    units: 10,
+    purchaseDate: "2024-01-15T00:00:00.000Z",
+    category: "Tech",
+  },
+  {
+    id: "2",
+    assetType: "crypto" as const,
+    assetName: "Bitcoin",
+    buyPrice: 30000.00,
+    currentPrice: 45000.00,
+    units: 0.5,
+    purchaseDate: "2024-02-01T00:00:00.000Z",
+    category: "Crypto",
+  },
+  {
+    id: "3",
+    assetType: "mutual-fund" as const,
+    assetName: "Vanguard S&P 500 ETF",
+    buyPrice: 400.00,
+    currentPrice: 420.00,
+    units: 5,
+    purchaseDate: "2024-03-10T00:00:00.000Z",
+    category: "Index Funds",
+  },
 ];
 
 let notifications = [
@@ -106,7 +155,7 @@ export const handlers = [
 
    // ---------- Transactions ----------
    http.get("/api/transactions", ({ request }: { request: Request }) => {
-     console.log("GET /api/transactions request:", { url: request.url });
+     console.log("🚀 MSW: GET /api/transactions request:", { url: request.url });
      const url = new URL(request.url);
      const page = url.searchParams.get("page");
 
@@ -116,18 +165,47 @@ export const handlers = [
        const perPage = 10;
        const start = (pageNum - 1) * perPage;
        const end = start + perPage;
+       console.log("🚀 MSW: Returning paginated transactions:", transactions.slice(start, end).length);
        return HttpResponse.json(transactions.slice(start, end));
      } else {
        // Return all transactions for charts/insights
+       console.log("🚀 MSW: Returning all transactions:", transactions.length);
        return HttpResponse.json(transactions);
      }
    }),
 
    http.post("/api/transactions", async ({ request }: { request: Request }) => {
-     const tx = (await request.json()) as Transaction;
+     const tx = (await request.json()) as Transaction & { walletId?: string };
      console.log("POST /api/transactions request:", tx);
-     const newTx = { ...tx, id: (transactions.length + 1).toString() };
+
+     // Default to "main" wallet if not specified
+     const walletId = tx.walletId || "main";
+
+     // Update wallet balance based on transaction type
+     const wallet = wallets.find(w => w.id === walletId);
+     if (!wallet) {
+       return HttpResponse.json({ error: "Wallet not found" }, { status: 400 });
+     }
+
+     if (tx.type === 'income') {
+       wallet.balance += tx.amount;
+     } else if (tx.type === 'expense') {
+       if (wallet.balance < tx.amount) {
+         return HttpResponse.json({ error: "Insufficient balance" }, { status: 400 });
+       }
+       wallet.balance -= tx.amount;
+     }
+     // Transfer logic would be handled separately via the transfer endpoint
+
+     // Ensure the transaction has the current timestamp, not just the date
+     const newTx = {
+       ...tx,
+       id: (transactions.length + 1).toString(),
+       walletId,
+       date: new Date().toISOString() 
+     };
      transactions = [newTx, ...transactions];
+     console.log("🚀 MSW: Created new transaction:", newTx);
      return HttpResponse.json(newTx, { status: 201 });
    }),
 
@@ -159,7 +237,7 @@ export const handlers = [
      return HttpResponse.json(wallets);
    }),
 
-   // ✅ Wallet Transfer API
+   // Wallet Transfer API
    http.post("/api/wallets/transfer", async ({ request }: { request: Request }) => {
      console.log("Transfer request received:", request.body);
      const body = (await request.json()) as { fromId: string; toId: string; amount: number };
@@ -221,7 +299,7 @@ export const handlers = [
      return HttpResponse.json({ success: true, from: fromWallet, to: toWallet });
    }),
 
-   // ✅ NEW: Wallet-specific transactions
+   // Wallet-specific transactions
    http.get("/api/wallets/:id/transactions", ({ params }: { params: { id: string } }) => {
      const { id } = params;
      const walletTx = transactions.filter((t) => t.walletId === id);
@@ -235,9 +313,11 @@ export const handlers = [
 
    // ---------- Balance ----------
    http.get("/api/balance", () => {
+     console.log("🚀 MSW: GET /api/balance");
      const total = wallets.reduce((sum, w) => sum + w.balance, 0);
      const available = total * 0.9;
      const pending = total - available;
+     console.log("🚀 MSW: Returning balance:", { total, available, pending });
      return HttpResponse.json({ total, available, pending });
    }),
 
@@ -246,9 +326,82 @@ export const handlers = [
      return HttpResponse.json(savingsGoals);
    }),
 
+   http.post("/api/savings-goals", async ({ request }: { request: Request }) => {
+     const goal = (await request.json()) as any;
+     const newGoal = {
+       ...goal,
+       id: (savingsGoals.length + 1).toString(),
+       isCompleted: false,
+       completedAt: null
+     };
+     savingsGoals = [newGoal, ...savingsGoals];
+     return HttpResponse.json(newGoal, { status: 201 });
+   }),
+
+   http.put("/api/savings-goals/:id", async ({ request, params }) => {
+     const { id } = params as { id: string };
+     const updatedGoal = (await request.json()) as any;
+     const index = savingsGoals.findIndex(g => g.id === id);
+     if (index === -1) {
+       return HttpResponse.json({ error: "Savings goal not found" }, { status: 404 });
+     }
+
+     // Check if goal should be marked as completed
+     const currentGoal = savingsGoals[index];
+     const shouldComplete = updatedGoal.current >= updatedGoal.target;
+
+     savingsGoals[index] = {
+       ...currentGoal,
+       ...updatedGoal,
+       isCompleted: shouldComplete,
+       completedAt: shouldComplete && !currentGoal.isCompleted ? new Date().toISOString() : currentGoal.completedAt
+     };
+
+     return HttpResponse.json(savingsGoals[index]);
+   }),
+
+   http.delete("/api/savings-goals/:id", ({ params }) => {
+     const { id } = params as { id: string };
+     const index = savingsGoals.findIndex(g => g.id === id);
+     if (index === -1) {
+       return HttpResponse.json({ error: "Savings goal not found" }, { status: 404 });
+     }
+     savingsGoals.splice(index, 1);
+     return HttpResponse.json({ success: true });
+   }),
+
    // ---------- Investments ----------
    http.get("/api/investments", () => {
+     console.log("🚀 MSW: GET /api/investments - returning:", investments.length, "investments");
      return HttpResponse.json(investments);
+   }),
+
+   http.post("/api/investments", async ({ request }: { request: Request }) => {
+     const investment = (await request.json()) as Omit<Investment, 'id'>;
+     const newInvestment = { ...investment, id: (investments.length + 1).toString() };
+     investments = [newInvestment, ...investments];
+     return HttpResponse.json(newInvestment, { status: 201 });
+   }),
+
+   http.put("/api/investments/:id", async ({ request, params }) => {
+     const { id } = params as { id: string };
+     const updatedInvestment = (await request.json()) as Partial<Investment>;
+     const index = investments.findIndex(inv => inv.id === id);
+     if (index === -1) {
+       return HttpResponse.json({ error: "Investment not found" }, { status: 404 });
+     }
+     investments[index] = { ...investments[index], ...updatedInvestment };
+     return HttpResponse.json(investments[index]);
+   }),
+
+   http.delete("/api/investments/:id", ({ params }) => {
+     const { id } = params as { id: string };
+     const index = investments.findIndex(inv => inv.id === id);
+     if (index === -1) {
+       return HttpResponse.json({ error: "Investment not found" }, { status: 404 });
+     }
+     investments.splice(index, 1);
+     return HttpResponse.json({ success: true });
    }),
 
    // ---------- Analytics ----------
@@ -256,17 +409,36 @@ export const handlers = [
      const totalTransactions = transactions.length;
      const totalSpent = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
      const avgPerTransaction = totalTransactions > 0 ? transactions.reduce((sum, t) => sum + t.amount, 0) / totalTransactions : 0;
+
+     // Calculate monthly income and expenses from current month transactions
+     const currentMonth = new Date().getMonth();
+     const currentYear = new Date().getFullYear();
+
+     const monthlyTransactions = transactions.filter(t => {
+       const txDate = new Date(t.date);
+       return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
+     });
+
+     const monthlyIncome = monthlyTransactions
+       .filter(t => t.type === 'income')
+       .reduce((sum, t) => sum + t.amount, 0);
+
+     const monthlyExpenses = monthlyTransactions
+       .filter(t => t.type === 'expense')
+       .reduce((sum, t) => sum + t.amount, 0);
+
      return HttpResponse.json({
        totalTransactions,
        totalSpent,
        avgPerTransaction,
-       monthlyIncome: 4500,
-       monthlyExpenses: 3200
+       monthlyIncome,
+       monthlyExpenses
      });
    }),
 
    // ---------- Notifications ----------
    http.get("/api/notifications", () => {
+     console.log("🚀 MSW: GET /api/notifications - returning:", notifications.length, "notifications");
      return HttpResponse.json(notifications);
    }),
 

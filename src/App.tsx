@@ -12,6 +12,7 @@ import Transactions from "./pages/transactions/Transactions";
 import Wallets from "./pages/wallets/Wallets";
 import Charts from "./pages/charts/Charts";
 import Settings from "./pages/settings/Settings";
+import Investments from "./pages/investments/Investments";
 
 // Layout
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -26,7 +27,7 @@ import Toast from "./components/Toast";
 // React Query
 const queryClient = new QueryClient();
 
-// ✅ RequireAuth component
+// RequireAuth component
 function RequireAuth({ children, roles }: { children: ReactNode; roles?: string[] }) {
   const { user, role } = useAuthStore();
   if (!user) return <Navigate to="/auth/signin" replace />;
@@ -34,21 +35,13 @@ function RequireAuth({ children, roles }: { children: ReactNode; roles?: string[
   return <>{children}</>;
 }
 
-// ✅ Main App component
+// Main App component
 export default function App() {
   const initializeTheme = useUIStore((s) => s.initializeTheme);
 
   useEffect(() => {
     // Initialize dark/light/system theme on app start
     initializeTheme();
-
-    // Start MSW only in development
-    if (import.meta.env.DEV) {
-      (async () => {
-        const { worker } = await import("./mocks/browser");
-        worker.start();
-      })();
-    }
   }, []);
 
   return (
@@ -98,6 +91,16 @@ export default function App() {
               <RequireAuth>
                 <DashboardLayout>
                   <Wallets />
+                </DashboardLayout>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/investments"
+            element={
+              <RequireAuth>
+                <DashboardLayout>
+                  <Investments />
                 </DashboardLayout>
               </RequireAuth>
             }

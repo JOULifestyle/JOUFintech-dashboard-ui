@@ -11,6 +11,7 @@ type UIState = {
   toggleCommandPalette: () => void;
 
   initializeTheme: () => void;
+  initializeCurrency: () => void;
 };
 
 export const useUIStore = create<UIState>((set) => ({
@@ -60,5 +61,12 @@ export const useUIStore = create<UIState>((set) => ({
 
     // set store
     set({ theme: saved });
+  },
+
+  initializeCurrency: () => {
+    if (typeof window === "undefined") return;
+
+    const saved = localStorage.currency || "USD";
+    set({ currency: saved });
   },
 }));

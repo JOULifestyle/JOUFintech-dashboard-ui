@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    // Check if user has explicitly logged out
+  
     const hasLoggedOut = localStorage.getItem('hasLoggedOut') === 'true';
 
     if (!hasLoggedOut) {
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Don't render children until we've checked for stored auth
   if (!initialized) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   return <>{children}</>;
