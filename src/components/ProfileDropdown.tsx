@@ -87,7 +87,7 @@ export default function ProfileDropdown() {
                       key={link.path}
                       to={link.path}
                       className={({ isActive }) =>
-                        `block px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                        `block px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white ${
                           isActive
                             ? "bg-linear-to-r from-joublue to-joupurple text-white"
                             : "text-gray-700 dark:text-gray-300"

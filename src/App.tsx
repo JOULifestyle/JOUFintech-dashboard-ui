@@ -54,17 +54,8 @@ export default function App() {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
 
-          {/* Dashboard Routes */}
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <DashboardLayout>
-                  <DashboardHome />
-                </DashboardLayout>
-              </RequireAuth>
-            }
-          />
+          {/* Root redirects to signin */}
+          <Route path="/" element={<Navigate to="/auth/signin" replace />} />
           <Route
             path="/dashboard"
             element={

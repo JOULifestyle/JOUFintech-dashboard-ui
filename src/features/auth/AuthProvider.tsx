@@ -8,52 +8,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-  
-    const hasLoggedOut = localStorage.getItem('hasLoggedOut') === 'true';
+    // Check for stored user data (from actual login, not auto-login)
+    const updatedUserData = localStorage.getItem('updatedUserData');
 
-    if (!hasLoggedOut) {
-      // Check for updated user data first
-      const updatedUserData = localStorage.getItem('updatedUserData');
-
-      let userToSet;
-      if (updatedUserData) {
-        try {
-          const parsed = JSON.parse(updatedUserData);
-          userToSet = parsed.user;
-          console.log('Restoring updated user data:', userToSet.email);
-        } catch (error) {
-          console.error('Error parsing updated user data:', error);
-          localStorage.removeItem('updatedUserData');
-        }
+    if (updatedUserData) {
+      try {
+        const parsed = JSON.parse(updatedUserData);
+        const userToSet = parsed.user;
+        console.log('Restoring authenticated user data:', userToSet.email);
+        setUser(userToSet, "user");
+      } catch (error) {
+        console.error('Error parsing updated user data:', error);
+        localStorage.removeItem('updatedUserData');
+        clearUser();
       }
-
-      // If still no user, use default mock user
-      if (!userToSet) {
-        userToSet = {
-          email: "john.doe@example.com",
-          displayName: "John Doe",
-          uid: "mock-uid-123",
-          emailVerified: true,
-          isAnonymous: false,
-          metadata: {},
-          providerData: [],
-          refreshToken: "mock-token",
-          tenantId: null,
-          delete: () => Promise.resolve(),
-          getIdToken: () => Promise.resolve("mock-token"),
-          getIdTokenResult: () => Promise.resolve({ token: "mock-token", claims: {}, signInProvider: "mock", signInSecondFactor: null, expirationTime: "", issuedAtTime: "", authTime: "" }),
-          reload: () => Promise.resolve(),
-          toJSON: () => ({}),
-          phoneNumber: null,
-          photoURL: null,
-          providerId: "mock"
-        };
-        console.log('Auto-logging in default mock user:', userToSet.email);
-      }
-
-      setUser(userToSet, "user");
     } else {
-      console.log('User has logged out, not auto-logging in');
+      console.log('No authenticated user found, user must sign in');
       clearUser();
     }
 

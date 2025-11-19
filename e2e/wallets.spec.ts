@@ -11,8 +11,8 @@ test.describe('Wallets', () => {
       console.log('PAGE ERROR:', error.message)
     })
 
-    // Clear localStorage and login
-    console.log('Clearing storage and starting login...')
+    // Clear localStorage and navigate to signin
+    console.log('Clearing storage and navigating to signin...')
     await page.context().addInitScript(() => {
       localStorage.clear();
       sessionStorage.clear();

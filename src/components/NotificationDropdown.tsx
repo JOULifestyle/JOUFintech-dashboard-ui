@@ -109,7 +109,7 @@ export default function NotificationDropdown() {
                 notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors ${
+                    className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white cursor-pointer transition-colors ${
                       !notification.isRead ? 'bg-blue-50 dark:bg-blue-900/10' : ''
                     }`}
                     onClick={() => handleNotificationClick(notification)}
@@ -132,7 +132,7 @@ export default function NotificationDropdown() {
                           e.stopPropagation();
                           removeNotification(notification.id);
                         }}
-                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="p-1 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <XMarkIcon className="w-4 h-4 text-gray-400" />
                       </button>
