@@ -44,7 +44,7 @@ export default function SavingsGoals() {
       await api.delete(`/savings-goals/${goalId}`);
       addToast({ message: 'Savings goal deleted successfully', type: 'success' });
       refetch();
-    } catch (error) {
+    } catch {
       addToast({ message: 'Failed to delete savings goal', type: 'error' });
     }
   };

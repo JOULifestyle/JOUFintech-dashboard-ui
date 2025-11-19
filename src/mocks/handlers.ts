@@ -12,6 +12,15 @@ interface Investment {
   category?: string;
 }
 
+interface SavingsGoal {
+  id: string;
+  name: string;
+  target: number;
+  current: number;
+  isCompleted: boolean;
+  completedAt: string | null;
+}
+
 // --------------------------
 // Fake In-Memory Databases
 // --------------------------
@@ -37,7 +46,7 @@ let transactions: Transaction[] = Array.from({ length: 25 }, (_, i) => ({
   ][i % 10],
 }));
 
-let wallets = [
+const wallets = [
   { id: "main", name: "Main Account", balance: 5000, createdAt: "2024-10-01T00:00:00.000Z" },
   { id: "savings", name: "Savings", balance: 2000, createdAt: "2024-11-01T00:00:00.000Z" },
   { id: "crypto", name: "Crypto", balance: 1000, createdAt: "2024-11-15T00:00:00.000Z" },
@@ -82,7 +91,7 @@ let investments: Investment[] = [
   },
 ];
 
-let notifications = [
+const notifications = [
   {
     id: "1",
     title: "Welcome to JOU Finance!",
@@ -327,8 +336,8 @@ export const handlers = [
    }),
 
    http.post("/api/savings-goals", async ({ request }: { request: Request }) => {
-     const goal = (await request.json()) as any;
-     const newGoal = {
+     const goal = (await request.json()) as Omit<SavingsGoal, 'id' | 'isCompleted' | 'completedAt'>;
+     const newGoal: SavingsGoal = {
        ...goal,
        id: (savingsGoals.length + 1).toString(),
        isCompleted: false,
@@ -340,7 +349,7 @@ export const handlers = [
 
    http.put("/api/savings-goals/:id", async ({ request, params }) => {
      const { id } = params as { id: string };
-     const updatedGoal = (await request.json()) as any;
+     const updatedGoal = (await request.json()) as Partial<SavingsGoal>;
      const index = savingsGoals.findIndex(g => g.id === id);
      if (index === -1) {
        return HttpResponse.json({ error: "Savings goal not found" }, { status: 404 });
@@ -348,7 +357,9 @@ export const handlers = [
 
      // Check if goal should be marked as completed
      const currentGoal = savingsGoals[index];
-     const shouldComplete = updatedGoal.current >= updatedGoal.target;
+     const shouldComplete = updatedGoal.current !== undefined && updatedGoal.target !== undefined
+       ? updatedGoal.current >= updatedGoal.target
+       : currentGoal.current >= currentGoal.target;
 
      savingsGoals[index] = {
        ...currentGoal,

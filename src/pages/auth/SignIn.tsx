@@ -23,7 +23,7 @@ export default function SignIn() {
       // Set user in store
       setUser(user, "user");
       navigate("/dashboard");
-    } catch (error) {
+    } catch {
       alert("Invalid credentials. Please use the demo account credentials shown above.");
     }
   };

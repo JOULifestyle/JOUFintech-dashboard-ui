@@ -52,6 +52,52 @@
 - **Persistent Settings**: All preferences saved to localStorage
 - **Responsive Design**: Optimized for all device sizes
 
+## 🧪 Testing
+
+### **Test Status**
+![Test Status](https://img.shields.io/badge/Tests-Passed-28a745?style=for-the-badge&logo=check-circle)
+![E2E Tests](https://img.shields.io/badge/E2E-16%20Tests-28a745?style=for-the-badge&logo=playwright)
+![Accessibility](https://img.shields.io/badge/Axe--Core-Implemented-9c42f5?style=for-the-badge&logo=accessibility)
+![CodeDev](https://img.shields.io/badge/CodeDev-Verified-007acc?style=for-the-badge&logo=visual-studio-code)
+
+### **Test Coverage**
+- **End-to-End Tests**: 16 comprehensive Playwright tests covering all major features
+- **Component Testing**: Transaction forms, wallet transfers, authentication flows
+- **Accessibility Testing**: WCAG compliance with axe-core automated checks
+- **Integration Testing**: API mocking with MSW for reliable test environments
+
+### **Accessibility Compliance**
+✅ **axe-core automated testing** implemented and running
+✅ **All accessibility tests passing** - WCAG 2 AA compliant
+- **Color Contrast**: Fixed - All text meets 4.5:1 contrast ratio requirement
+- **Heading Hierarchy**: Fixed - Proper H1→H2→H3 semantic structure
+- **Keyboard Navigation**: Fixed - Scrollable regions have keyboard accessibility
+- **Button Contrast**: Fixed - All buttons meet contrast requirements
+
+### **Running Tests**
+```bash
+# Run unit/component tests
+npm run test
+
+# Run unit tests with UI
+npm run test:ui
+
+# Run unit tests once (CI mode)
+npm run test:run
+
+# Run unit tests with coverage
+npm run test:coverage
+
+# Run E2E tests
+npm run e2e
+
+# Run E2E tests with UI
+npm run e2e:ui
+
+# Generate E2E test report
+npx playwright show-report
+```
+
 ## 🛠️ Tech Stack
 
 ### **Frontend Framework**
@@ -228,10 +274,6 @@ jou-finance/
 
 ## 🚀 Installation & Setup
 
-### **Prerequisites**
-- **Node.js** 18+ and npm
-- **Git** for version control
-
 ### **Installation Steps**
 
 1. **Clone the repository**
@@ -264,10 +306,17 @@ jou-finance/
 ### **Available Scripts**
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+npm run lint        # Run ESLint
+npm run test        # Run unit/component tests
+npm run test:ui     # Run unit tests with UI
+npm run test:run    # Run unit tests once (CI mode)
+npm run test:coverage # Run unit tests with coverage
+npm run e2e         # Run E2E tests with Playwright
+npm run e2e:ui      # Run E2E tests with UI
+npm run e2e:install # Install Playwright browsers
 ```
 
 ## 📖 Usage Guide

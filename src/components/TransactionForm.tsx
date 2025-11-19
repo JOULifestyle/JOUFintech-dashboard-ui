@@ -115,7 +115,7 @@ export default function TransactionForm({ onClose }: TransactionFormProps) {
             <option value="">
               {walletsLoading ? "Loading wallets..." : "Select a wallet"}
             </option>
-            {wallets.map((wallet: any) => (
+            {Array.isArray(wallets) && wallets.map((wallet: any) => (
               <option key={wallet.id} value={wallet.id}>
                 {wallet.name} ({getCurrencySymbol(currency)}{(wallet.balance * (exchangeRates[currency] || 1)).toLocaleString()})
               </option>

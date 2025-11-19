@@ -17,9 +17,10 @@ import { worker } from "./mocks/browser";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors, but retry network errors and MSW timing issues
-        if (error?.response?.status >= 400 && error?.response?.status < 500) {
+        const axiosError = error as { response?: { status: number } } | undefined;
+        if (axiosError?.response?.status && axiosError.response.status >= 400 && axiosError.response.status < 500) {
           return false;
         }
         // Retry failed requests up to 5 times for network/MSW issues
@@ -82,7 +83,7 @@ function AppInitializer() {
       try {
         const res = await api.get("/notifications");
         setNotifications(res.data);
-      } catch (error) {
+      } catch {
         // Fallback: load mock notifications directly if API fails
         const mockNotifications = [
           {

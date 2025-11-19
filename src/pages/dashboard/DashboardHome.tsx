@@ -189,7 +189,7 @@ export default function DashboardHome() {
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Active Wallets</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{wallets.length}</p>
-              <p className="text-sm text-green-600 dark:text-green-400">+{walletsThisMonth} this month</p>
+              <p className="text-sm text-green-700 dark:text-green-400">+{walletsThisMonth} this month</p>
             </div>
             <div className="w-12 h-12 bg-joublue-100 dark:bg-joublue-900/30 rounded-xl flex items-center justify-center">
               <BanknotesIcon className="h-6 w-6 text-joublue-600 dark:text-joublue-400" />
@@ -209,7 +209,7 @@ export default function DashboardHome() {
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {formatCurrency(analytics?.monthlyIncome || 0)}
               </p>
-              <p className="text-sm text-green-600 dark:text-green-400">Income</p>
+              <p className="text-sm text-green-700 dark:text-green-400">Income</p>
             </div>
             <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
               <ArrowTrendingUpIcon className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -230,7 +230,7 @@ export default function DashboardHome() {
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {formatCurrency(totalInvestments)}
               </p>
-              <p className="text-sm text-green-600 dark:text-green-400">+15.7%</p>
+              <p className="text-sm text-green-700 dark:text-green-400">+15.7%</p>
             </div>
             <div className="w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-xl flex items-center justify-center">
               <ChartBarIcon className="h-6 w-6 text-accent-600 dark:text-accent-400" />
@@ -270,9 +270,12 @@ export default function DashboardHome() {
           className="lg:col-span-2 space-y-6"
         >
           {/* Charts Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <LineChartCard data={lineData} title="Monthly Spending Trend" currency={currency} exchangeRates={exchangeRates} />
-            <PieChartCard data={pieData} title="Spending by Category" currency={currency} exchangeRates={exchangeRates} />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Financial Analytics</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <LineChartCard data={lineData} title="Monthly Spending Trend" currency={currency} exchangeRates={exchangeRates} />
+              <PieChartCard data={pieData} title="Spending by Category" currency={currency} exchangeRates={exchangeRates} />
+            </div>
           </div>
 
           {/* Recent Transactions */}
@@ -319,7 +322,7 @@ export default function DashboardHome() {
                 <div className="text-right">
                   <p className={`font-semibold ${
                     transaction.type === 'income'
-                      ? 'text-green-600 dark:text-green-400'
+                      ? 'text-green-700 dark:text-green-400'
                       : 'text-red-600 dark:text-red-400'
                   }`}>
                     {transaction.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(transaction.amount))}
@@ -336,6 +339,8 @@ export default function DashboardHome() {
 
         {/* Quick Actions & Notifications */}
         <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Account Management</h2>
+
           {/* Quick Actions */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -397,7 +402,26 @@ export default function DashboardHome() {
               )}
             </div>
             {notificationsEnabled ? (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
+              <div
+                className="space-y-3 max-h-64 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-joublue focus:ring-opacity-50 rounded"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    const focusableElements = e.currentTarget.querySelectorAll('button, [tabindex]:not([tabindex="-1"])')
+                    const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as Element)
+                    let nextIndex
+
+                    if (e.key === 'ArrowDown') {
+                      nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0
+                    } else {
+                      nextIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1
+                    }
+
+                    ;(focusableElements[nextIndex] as HTMLElement).focus()
+                  }
+                }}
+              >
                 {notifications.length === 0 ? (
                   <p className="text-sm text-gray-600 dark:text-gray-400">No notifications</p>
                 ) : (

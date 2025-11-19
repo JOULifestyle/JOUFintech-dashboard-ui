@@ -176,7 +176,7 @@ export default function TransactionsPage() {
                       </td>
                       <td className={`px-6 py-4 text-sm font-semibold ${
                         tx.type === 'income'
-                          ? 'text-green-600 dark:text-green-400'
+                          ? 'text-green-700 dark:text-green-400'
                           : 'text-red-600 dark:text-red-400'
                       }`}>
                         {tx.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-US', {
@@ -198,13 +198,13 @@ export default function TransactionsPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => alert("Edit modal not implemented here")}
-                            className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium rounded-lg transition-colors"
+                            className="px-3 py-1 bg-slate-700 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition-colors"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDelete(tx.id)}
-                            className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded-lg transition-colors"
+                            className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition-colors"
                           >
                             Delete
                           </button>

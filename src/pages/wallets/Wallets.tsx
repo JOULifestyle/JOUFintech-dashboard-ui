@@ -107,6 +107,7 @@ export default function WalletsPage() {
       </div>
 
       {/* Wallet Grid */}
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Wallets</h2>
       {wallets.length === 0 ? (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
           <div className="w-16 h-16 bg-linear-to-br from-joublue to-joupurple rounded-2xl flex items-center justify-center mx-auto mb-4">
