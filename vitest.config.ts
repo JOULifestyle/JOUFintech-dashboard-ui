@@ -12,7 +12,7 @@ export default defineConfig({
     exclude: ['e2e/**', 'node_modules/**'],
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     coverage: {
-      provider: 'v8',
+      provider: 'istanbul',
       reporter: ['text', 'lcov'],
     },
   },
