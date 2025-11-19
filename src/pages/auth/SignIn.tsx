@@ -4,6 +4,7 @@ import { useAuthStore } from "../../stores/authStore";
 import { signIn } from "../../api/auth";
 
 export default function SignIn() {
+  console.log("SignIn component rendered");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
