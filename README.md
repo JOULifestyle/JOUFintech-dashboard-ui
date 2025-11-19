@@ -55,6 +55,7 @@
 ## 🧪 Testing
 
 ### **Test Status**
+[![CI](https://github.com/JOULifestyle/JOUFinance/actions/workflows/ci.yml/badge.svg)](https://github.com/JOULifestyle/JOUFinance/actions)
 ![Test Status](https://img.shields.io/badge/Tests-Passed-28a745?style=for-the-badge&logo=check-circle)
 ![E2E Tests](https://img.shields.io/badge/E2E-16%20Tests-28a745?style=for-the-badge&logo=playwright)
 ![Accessibility](https://img.shields.io/badge/Axe--Core-Implemented-9c42f5?style=for-the-badge&logo=accessibility)
