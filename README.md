@@ -58,7 +58,6 @@
 ![Test Status](https://img.shields.io/badge/Tests-Passed-28a745?style=for-the-badge&logo=check-circle)
 ![E2E Tests](https://img.shields.io/badge/E2E-16%20Tests-28a745?style=for-the-badge&logo=playwright)
 ![Accessibility](https://img.shields.io/badge/Axe--Core-Implemented-9c42f5?style=for-the-badge&logo=accessibility)
-![CodeDev](https://img.shields.io/badge/CodeDev-Verified-007acc?style=for-the-badge&logo=visual-studio-code)
 
 ### **Test Coverage**
 - **End-to-End Tests**: 16 comprehensive Playwright tests covering all major features
