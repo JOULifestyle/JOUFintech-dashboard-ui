@@ -38,8 +38,8 @@ export default function LineChartCard({ data, title, currency = 'USD', exchangeR
           {title}
         </h3>
       )}
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-64 min-w-0">
+        <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={200}>
           <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid
               strokeDasharray="3 3"

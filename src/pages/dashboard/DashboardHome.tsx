@@ -121,9 +121,11 @@ export default function DashboardHome() {
 
   const formatCurrency = (amount: number) => {
     const convertedAmount = amount * (exchangeRates[currency] || 1);
+    // Ensure currency is a valid 3-letter code, fallback to USD
+    const validCurrency = currency && currency.length === 3 && /^[A-Z]{3}$/.test(currency) ? currency : 'USD';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency,
+      currency: validCurrency,
       minimumFractionDigits: 2
     }).format(convertedAmount);
   };

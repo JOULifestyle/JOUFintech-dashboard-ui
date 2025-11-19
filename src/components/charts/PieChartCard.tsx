@@ -67,8 +67,8 @@ export default function PieChartCard({ data, title, currency = 'USD', exchangeRa
           {title}
         </h3>
       )}
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-64 min-w-0">
+        <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={200}>
           <PieChart>
             <Pie
               data={data}
