@@ -6,14 +6,21 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
     exclude: ['e2e/**', 'node_modules/**'],
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+        url: 'http://localhost:3000'
+      }
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
+      reportsDirectory: './coverage',
       exclude: [
         'node_modules/**',
         'src/test/**',
