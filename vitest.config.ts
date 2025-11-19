@@ -12,8 +12,19 @@ export default defineConfig({
     exclude: ['e2e/**', 'node_modules/**'],
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     coverage: {
-      provider: 'istanbul',
+      provider: 'v8',
       reporter: ['text', 'lcov'],
+      exclude: [
+        'node_modules/**',
+        'src/test/**',
+        'e2e/**',
+        '**/*.d.ts',
+        '**/*.config.*',
+        'coverage/**',
+        'dist/**',
+        'public/**',
+      ],
+      include: ['src/**/*.{js,ts,jsx,tsx}'],
     },
   },
 })
