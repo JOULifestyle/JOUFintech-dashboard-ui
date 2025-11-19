@@ -20,7 +20,7 @@ import {
   groupByCategory,
   generateInsights,
 } from "../../features/utils/chartUtils";
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import LineChartCard from "../../components/charts/LineChartCard";
 import PieChartCard from "../../components/charts/PieChartCard";
 import TransactionForm from "../../components/TransactionForm";
@@ -105,9 +105,17 @@ export default function DashboardHome() {
   const totalBalance = balanceData?.total || 0;
   const totalInvestments = investments.reduce((sum: number, inv: any) => sum + (inv.units * inv.currentPrice), 0);
   const recentTransactions = transactions.slice(0, 5);
-  const lineData = groupByMonth(allTx);
-  const pieData = groupByCategory(allTx);
-  const insights = generateInsights(allTx);
+
+  // Provide default data for charts when no transactions exist
+  const lineData = allTx.length > 0 ? groupByMonth(allTx) : [
+    { month: format(new Date(), 'yyyy-MM'), total: 0 }
+  ];
+  const pieData = allTx.length > 0 ? groupByCategory(allTx) : [
+    { name: 'No Data', value: 1 }
+  ];
+  const insights = allTx.length > 0 ? generateInsights(allTx) : [
+    '💡 Start by adding your first transaction to see financial insights and analytics.'
+  ];
 
   // Calculate wallets added this month
   const currentMonth = new Date().getMonth();
