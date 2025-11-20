@@ -31,7 +31,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <div className="bg-gray-50 rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-linear-to-br from-joublue to-joupurple rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-2xl">J</span>

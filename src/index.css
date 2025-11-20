@@ -28,11 +28,20 @@
 
 /* Override browser autofill styles */
 input:-webkit-autofill,
-input:-moz-autofill {
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-moz-autofill,
+input:-moz-autofill:hover,
+input:-moz-autofill:focus,
+input:-moz-autofill:active {
   -webkit-text-fill-color: #111827 !important;
   -moz-text-fill-color: #111827 !important;
   color: #111827 !important;
+  background-color: white !important;
+  background: white !important;
   -webkit-box-shadow: 0 0 0px 1000px white inset !important;
   -moz-box-shadow: 0 0 0px 1000px white inset !important;
   box-shadow: 0 0 0px 1000px white inset !important;
+  transition: background-color 0s ease-out !important;
 }
