@@ -364,7 +364,7 @@ export default function DashboardHome() {
             <div className="space-y-3">
               <button
                 onClick={() => handleQuickAction('add-transaction')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-joublue-50 dark:bg-joublue-900/20 hover:bg-joublue-100 dark:hover:bg-joublue-900/30 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
+                className="w-full flex items-center gap-3 p-3 text-left bg-joublue-50 dark:bg-joublue-900/20 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <PlusIcon className="h-5 w-5 text-joublue-600 dark:text-joublue-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -374,7 +374,7 @@ export default function DashboardHome() {
 
               <button
                 onClick={() => handleQuickAction('manage-wallets')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
+                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <BanknotesIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -384,7 +384,7 @@ export default function DashboardHome() {
 
               <button
                 onClick={() => handleQuickAction('view-analytics')}
-                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
+                className="w-full flex items-center gap-3 p-3 text-left bg-gray-50 dark:bg-gray-700/50 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white hover:shadow-lg hover:-translate-y-1 rounded-xl transition-all duration-200 transform"
               >
                 <ChartBarIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -543,8 +543,8 @@ export default function DashboardHome() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all whitespace-nowrap shrink-0 ${
                   activeTab === tab.id
-                    ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-soft'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                    ? 'bg-linear-to-r from-joublue to-joupurple text-white shadow-soft'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-white hover:bg-linear-to-r hover:from-joublue hover:to-joupurple focus:bg-linear-to-r focus:from-joublue focus:to-joupurple focus:text-white'
                 }`}
               >
                 <Icon className="h-4 w-4 shrink-0" />

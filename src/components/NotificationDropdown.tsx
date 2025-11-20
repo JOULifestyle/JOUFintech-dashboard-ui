@@ -53,7 +53,7 @@ export default function NotificationDropdown() {
         onClick={() => notificationsEnabled && setIsOpen(!isOpen)}
         className={`relative p-2 rounded-lg transition-colors ${
           notificationsEnabled
-            ? 'hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer opacity-100'
+            ? 'hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white cursor-pointer opacity-100 focus:bg-linear-to-r focus:from-joublue focus:to-joupurple focus:text-white'
             : 'cursor-not-allowed opacity-50'
         }`}
         aria-label="Notifications"

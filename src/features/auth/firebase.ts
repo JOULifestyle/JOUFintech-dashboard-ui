@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
+  updateProfile,
   type User
 } from "firebase/auth";
 
@@ -28,8 +29,13 @@ setPersistence(auth, browserLocalPersistence).catch((error) => {
 export const signIn = (email: string, password: string) =>
   signInWithEmailAndPassword(auth, email, password);
 
-export const signUp = (email: string, password: string) =>
-  createUserWithEmailAndPassword(auth, email, password);
+export const signUp = async (email: string, password: string, displayName?: string) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  if (displayName && userCredential.user) {
+    await updateProfile(userCredential.user, { displayName });
+  }
+  return userCredential;
+};
 
 export const logout = () => signOut(auth);
 

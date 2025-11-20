@@ -3,6 +3,7 @@ import { signUp } from "../../features/auth/firebase";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function SignUp() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -12,7 +13,7 @@ export default function SignUp() {
     e.preventDefault();
     if (password !== confirm) return alert("Passwords do not match");
     try {
-      await signUp(email, password);
+      await signUp(email, password, fullName);
       navigate("/dashboard");
     } catch (err: any) {
       alert(err.message);
@@ -20,9 +21,23 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+    <>
+      <style>
+        {`
+          input:-webkit-autofill,
+          input:-moz-autofill {
+            -webkit-text-fill-color: #111827 !important;
+            -moz-text-fill-color: #111827 !important;
+            color: #111827 !important;
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+            -moz-box-shadow: 0 0 0px 1000px white inset !important;
+            box-shadow: 0 0 0px 1000px white inset !important;
+          }
+        `}
+      </style>
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-linear-to-br from-joublue to-joupurple rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-2xl">J</span>
@@ -32,20 +47,37 @@ export default function SignUp() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none"
-                required
-              />
-            </div>
+             <div>
+               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                 Full Name
+               </label>
+               <input
+                 id="fullName"
+                 type="text"
+                 placeholder="Enter your full name"
+                 value={fullName}
+                 onChange={(e) => setFullName(e.target.value)}
+                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none"
+                 autoComplete="name"
+                 required
+               />
+             </div>
+
+             <div>
+               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                 Email Address
+               </label>
+               <input
+                 id="email"
+                 type="email"
+                 placeholder="Enter your email"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none text-gray-900!"
+                 autoComplete="email"
+                 required
+               />
+             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -58,6 +90,7 @@ export default function SignUp() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none"
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -73,6 +106,7 @@ export default function SignUp() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none"
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -99,5 +133,6 @@ export default function SignUp() {
         </div>
       </div>
     </div>
+    </>
   );
 }

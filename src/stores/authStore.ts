@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { updateProfile } from "firebase/auth";
 import type { User } from "firebase/auth";
 
 type AuthState = {
@@ -24,9 +25,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     localStorage.removeItem('token');
     set({ user: null, role: null });
   },
-  updateProfile: (updates) => {
+  updateProfile: async (updates) => {
     const currentUser = get().user;
     if (currentUser) {
+      // Update Firebase profile
+      await updateProfile(currentUser, {
+        displayName: updates.displayName,
+      });
+
       const updatedUser = {
         ...currentUser,
         displayName: updates.displayName ?? currentUser.displayName,

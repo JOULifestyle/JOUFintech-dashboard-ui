@@ -322,7 +322,7 @@ npm run e2e:install # Install Playwright browsers
 ## 📖 Usage Guide
 
 ### **Getting Started**
-1. **Sign Up/Login** - Create account or sign in with existing credentials (Sign in with provided Mock Credentials for full experience)
+1. **Sign Up/Login** - Create account or sign in with existing credentials
 2. **Set Preferences** - Choose currency and theme in settings
 3. **Add Wallets** - Create financial accounts to track
 4. **Record Transactions** - Start adding income and expenses

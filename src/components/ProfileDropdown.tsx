@@ -27,7 +27,7 @@ export default function ProfileDropdown() {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-linear-to-r hover:from-joublue hover:to-joupurple hover:text-white rounded-lg transition-colors focus:bg-linear-to-r focus:from-joublue focus:to-joupurple focus:text-white"
           aria-label="Profile menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
