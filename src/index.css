@@ -25,3 +25,14 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Override browser autofill styles */
+input:-webkit-autofill,
+input:-moz-autofill {
+  -webkit-text-fill-color: #111827 !important;
+  -moz-text-fill-color: #111827 !important;
+  color: #111827 !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -moz-box-shadow: 0 0 0px 1000px white inset !important;
+  box-shadow: 0 0 0px 1000px white inset !important;
+}

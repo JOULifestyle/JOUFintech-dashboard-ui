@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
-import { signIn } from "../../features/auth/firebase";
+import { signIn } from "../../api/auth";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -13,8 +13,9 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      const userCredential = await signIn(email, password);
-      const user = userCredential.user;
+      const { user, token } = await signIn(email, password);
+      // Store token
+      localStorage.setItem('token', token);
       // Store user data
       localStorage.setItem('updatedUserData', JSON.stringify({ user, role: "user", timestamp: Date.now() }));
       // Clear the logout flag
@@ -28,21 +29,7 @@ export default function SignIn() {
   };
 
   return (
-    <>
-      <style>
-        {`
-          input:-webkit-autofill,
-          input:-moz-autofill {
-            -webkit-text-fill-color: #111827 !important;
-            -moz-text-fill-color: #111827 !important;
-            color: #111827 !important;
-            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-            -moz-box-shadow: 0 0 0px 1000px white inset !important;
-            box-shadow: 0 0 0px 1000px white inset !important;
-          }
-        `}
-      </style>
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
@@ -95,6 +82,13 @@ export default function SignIn() {
           </form>
 
           <div className="mt-6 text-center space-y-2">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800 font-medium mb-1">Demo Account</p>
+              <p className="text-xs text-blue-600">
+                Email: john.doe@example.com<br />
+                Password: password123
+              </p>
+            </div>
             <p className="text-gray-600">
               Don't have an account?{' '}
               <Link
@@ -116,6 +110,5 @@ export default function SignIn() {
         </div>
       </div>
     </div>
-    </>
   );
 }

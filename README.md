@@ -6,6 +6,8 @@
 
 **Created by:** Israel Olasehinde
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-JOU%20Finance-3b82f6?style=for-the-badge&logo=vercel)](https://jou-finance.vercel.app/)
+
 ![JOU Finance](https://img.shields.io/badge/JOU-Finance-3b82f6?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCA2LjQ4IDIgMTIgMiAxN3M0LjQ4IDUgMTAgNXMxMC00LjUyIDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MiAwLTgtMy41OC04LThzMy41OC04IDgtOCA4IDMuNTggOCA4LTMuNTggOCA4IDh6IiBmaWxsPSIjM2I4MmY2Ii8+Cjwvc3ZnPgo=)
 
 ## 🌟 Features

@@ -58,7 +58,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 <p className="text-joublue-100 text-sm">Update your personal details</p>
               </div>
             </div>
-            <button onClick={onClose} className="text-white hover:text-gray-200 transition-colors">
+            <button onClick={onClose} className="text-white hover:text-gray-200 transition-colors" aria-label="Close profile modal">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>

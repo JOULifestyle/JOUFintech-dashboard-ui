@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useAuthStore } from "../../stores/authStore";
-import { onAuthChange } from "./firebase";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const setUser = useAuthStore((state) => state.setUser);
@@ -9,22 +8,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    // Listen to Firebase auth state changes
-    const unsubscribe = onAuthChange((user) => {
-      if (user) {
-        console.log('Firebase user authenticated:', user.email);
-        // Store user data for persistence
-        localStorage.setItem('updatedUserData', JSON.stringify({ user, role: "user", timestamp: Date.now() }));
-        setUser(user, "user");
-      } else {
-        console.log('No authenticated user found, user must sign in');
+    // Check for stored user data (from actual login, not auto-login)
+    const updatedUserData = localStorage.getItem('updatedUserData');
+
+    if (updatedUserData) {
+      try {
+        const parsed = JSON.parse(updatedUserData);
+        const userToSet = parsed.user;
+        console.log('Restoring authenticated user data:', userToSet.email);
+        setUser(userToSet, "user");
+      } catch (error) {
+        console.error('Error parsing updated user data:', error);
         localStorage.removeItem('updatedUserData');
         clearUser();
       }
-      setInitialized(true);
-    });
+    } else {
+      console.log('No authenticated user found, user must sign in');
+      clearUser();
+    }
 
-    return unsubscribe;
+    setInitialized(true);
   }, []);
 
   // Don't render children until we've checked for stored auth

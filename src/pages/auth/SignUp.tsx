@@ -21,21 +21,7 @@ export default function SignUp() {
   };
 
   return (
-    <>
-      <style>
-        {`
-          input:-webkit-autofill,
-          input:-moz-autofill {
-            -webkit-text-fill-color: #111827 !important;
-            -moz-text-fill-color: #111827 !important;
-            color: #111827 !important;
-            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-            -moz-box-shadow: 0 0 0px 1000px white inset !important;
-            box-shadow: 0 0 0px 1000px white inset !important;
-          }
-        `}
-      </style>
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-joublue to-joupurple p-4">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
@@ -133,6 +119,5 @@ export default function SignUp() {
         </div>
       </div>
     </div>
-    </>
   );
 }
