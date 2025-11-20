@@ -38,34 +38,32 @@ const queryClient = new QueryClient({
   },
 });
 
-// Start MSW in dev mode
-if (import.meta.env.DEV) {
-  console.log('🚀 Starting MSW worker...');
+// Start MSW
+console.log('🚀 Starting MSW worker...');
 
-  // Start MSW synchronously
+// Start MSW synchronously
+worker.start({
+  onUnhandledRequest: 'bypass',
+  quiet: false,
+  serviceWorker: {
+    url: '/mockServiceWorker.js',
+    options: {
+      scope: '/'
+    }
+  }
+}).then(() => {
+  console.log('✅ MSW worker started successfully');
+}).catch((error) => {
+  console.error('❌ Failed to start MSW worker:', error);
+  // Fallback: try to start without service worker options
+  console.log('🔄 Retrying MSW startup...');
   worker.start({
     onUnhandledRequest: 'bypass',
-    quiet: false,
-    serviceWorker: {
-      url: '/mockServiceWorker.js',
-      options: {
-        scope: '/'
-      }
-    }
-  }).then(() => {
-    console.log('✅ MSW worker started successfully');
-  }).catch((error) => {
-    console.error('❌ Failed to start MSW worker:', error);
-    // Fallback: try to start without service worker options
-    console.log('🔄 Retrying MSW startup...');
-    worker.start({
-      onUnhandledRequest: 'bypass',
-      quiet: false
-    }).catch((retryError) => {
-      console.error('❌ MSW startup failed completely:', retryError);
-    });
+    quiet: false
+  }).catch((retryError) => {
+    console.error('❌ MSW startup failed completely:', retryError);
   });
-}
+});
 
 // Apply initial theme, currency and load notifications
 function AppInitializer() {

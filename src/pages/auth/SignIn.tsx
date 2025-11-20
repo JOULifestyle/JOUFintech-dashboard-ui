@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
-import { signIn } from "../../api/auth";
+import { signIn } from "../../features/auth/firebase";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -13,9 +13,8 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      const { user, token } = await signIn(email, password);
-      // Store token
-      localStorage.setItem('token', token);
+      const userCredential = await signIn(email, password);
+      const user = userCredential.user;
       // Store user data
       localStorage.setItem('updatedUserData', JSON.stringify({ user, role: "user", timestamp: Date.now() }));
       // Clear the logout flag
