@@ -59,7 +59,7 @@ export default function SignUp() {
                  placeholder="Enter your email"
                  value={email}
                  onChange={(e) => setEmail(e.target.value)}
-                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none text-gray-900!"
+                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-joublue focus:border-transparent transition-all duration-200 outline-none text-gray-900! bg-white"
                  autoComplete="email"
                  required
                />
